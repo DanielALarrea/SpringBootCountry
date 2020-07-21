@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cognixia.model.Country;
 
 @RestController
-@RequestMapping("/assign")
+@RequestMapping("/country")
 public class CountryController {
 
 	@GetMapping("hello")
@@ -21,7 +21,7 @@ public class CountryController {
 		return "Hello from Country App";
 	}
 	
-	@GetMapping("country/all")
+	@GetMapping("all")
 	public String printCountries()
 	{
 		List<Country> countryList = initCountries();
@@ -33,21 +33,21 @@ public class CountryController {
 		return allCountries;
 	}
 	
-	@GetMapping("country/{name}/population")
+	@GetMapping("{name}/population")
 	public String printPopulation(@PathVariable String name)
 	{
 		Country country = compareName(name);
 		return "The population of " + country.getName() + " is: " + country.getPopulation() + " million";
 	}
 	
-	@GetMapping("country/{name}/capital")
+	@GetMapping("{name}/capital")
 	public String printCapital(@PathVariable String name)
 	{
 		Country country = compareName(name);
 		return "The capital of " + country.getName() + " is " + country.getCapital();
 	}
 	
-	@GetMapping("country/compare")
+	@GetMapping("compare")
 	public String sayComparePopulation(@RequestParam String name1, @RequestParam String name2)
 	{
 		Country country1 = compareName(name1);
