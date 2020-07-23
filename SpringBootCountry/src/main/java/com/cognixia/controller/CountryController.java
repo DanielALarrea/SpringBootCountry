@@ -24,11 +24,25 @@ public class CountryController {
 	@GetMapping("all")
 	public String printCountries()
 	{
+		// BUG: Spaces in the name dont work with a href?
+		// Temp solution: edit data to not have any spaces
 		List<Country> countryList = initCountries();
 		String allCountries = "";
+		allCountries += "<table border=1><th>Country</th><th>Capital</th><th>Population</th>";
+		String countryName = "";
 		for(Country co: countryList) {
-			allCountries += "Country: " + co.getName() + ", Capital: " + co.getCapital() + "\n";
+			//countryName = co.getName();
+			//co = compareName(co.getName());
+			allCountries += "<tr><td>" + co.getName() + "</td><td>" + co.getCapital() + "</td>";
+			allCountries += "<td><a href=" + co.getName().replaceAll("\\s+","") + "/population>GO</a></td></tr>";
 		}
+		allCountries += "</table>";
+		
+		allCountries += "<form name=compareform action=compare method=GET>"
+				+ "<input type=text name=name1 required><br>"
+				+ "<input type=text name=name2 required><br>"
+				+ "<input type=submit value=Compare Population>"
+				+ "</form>";
 		
 		return allCountries;
 	}
@@ -50,8 +64,8 @@ public class CountryController {
 	@GetMapping("compare")
 	public String sayComparePopulation(@RequestParam String name1, @RequestParam String name2)
 	{
-		Country country1 = compareName(name1);
-		Country country2 = compareName(name2);
+		Country country1 = compareName(name1.replaceAll("\\s+",""));
+		Country country2 = compareName(name2.replaceAll("\\s+",""));
 		if(country1.getPopulation() != -1 && country2.getPopulation() != -1) {
 			if (country1.getPopulation() > country2.getPopulation()) {
 				return country1.getName() + " has a higher population than " + country2.getName();
@@ -83,7 +97,7 @@ public class CountryController {
 		Country country = new Country("No Name", "No Capital", -1);
 		List<Country> countryList = initCountries();
 		for(Country co: countryList) {
-			if(name.equalsIgnoreCase(co.getName())) {
+			if(name.equalsIgnoreCase(co.getName().replaceAll("\\s+",""))) {
 				country = co;
 			}
 		}
